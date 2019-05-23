@@ -31,3 +31,13 @@ func IntVal(data interface{}) (int, error) {
 		return 0, errors.New("unknown type")
 	}
 }
+
+func In(w int, ws []int) bool {
+	for k := range ws {
+		if ws[k] == w {
+			return true
+		}
+	}
+
+	return false
+}

@@ -1,6 +1,6 @@
-package time
+package env
 
-import "github.com/liangran2018/100Million/base"
+import "github.com/liangran2018/100million/base"
 
 var health = 100
 
@@ -11,7 +11,7 @@ func HealthAdd(i int) {
 	}
 }
 
-func HealthPlus(i int) {
+func HealthSub(i int) {
 	health -= i
 	if health <= 0 {
 		panic(health)
@@ -27,3 +27,7 @@ func HealthWhole() {
 }
 
 func Ill() {}
+
+func HealthGet() int {
+	return health
+}
