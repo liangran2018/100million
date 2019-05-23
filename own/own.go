@@ -69,3 +69,12 @@ func GoodsNum(g goods.GoodsIndex) int {
 	}
 	return f.num
 }
+
+func GoodsTotalPrice() int {
+	t := 0
+	for _, v := range own {
+		t += v.price * v.num
+	}
+
+	return t
+}

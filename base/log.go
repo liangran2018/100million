@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 	"time"
-
-	"github.com/liangran2018/lived/base"
 )
 
 type LogLvl int
@@ -20,7 +18,7 @@ const (
 )
 
 func NewLogFile() {
-	if ok := base.Exists("./operaLog"); !ok {
+	if ok := Exists("./operaLog"); !ok {
 		if err := os.Mkdir("./operaLog", os.ModePerm); err != nil {
 			panic(err)
 		}
@@ -33,7 +31,7 @@ func NewLogFile() {
 
 	i := 1
 	for _, file := range files {
-		if file.IsDir() || base.Exists(fmt.Sprintf("./operaLog/log%d.txt", i)) {
+		if file.IsDir() || Exists(fmt.Sprintf("./operaLog/log%d.txt", i)) {
 			i++
 			continue
 		}
@@ -80,7 +78,7 @@ func Log(lvl LogLvl, opera ...interface{}) {
 	}
 
 	for _, o := range opera {
-		logFile.WriteString(base.StrVal(o) + " ")
+		logFile.WriteString(StrVal(o) + " ")
 	}
 	logFile.WriteString("\n")
 }

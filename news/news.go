@@ -17,6 +17,8 @@ type newsIndex int
 var news map[goods.GoodsIndex][]newsIndex
 var newsStr map[newsIndex]newsFeature
 
+var newsSave map[goods.GoodsIndex]newsIndex
+
 const (
 	All newsIndex = iota
 	MikeTeeMore
@@ -29,6 +31,8 @@ func init() {
 	news[goods.MilkTee] = []newsIndex{All, MikeTeeMore, MikeTeeLess}
 
 	newsStr = make(map[newsIndex]newsFeature, newsEnd)
+
+	newsSave = make(map[goods.GoodsIndex]newsIndex)
 }
 
 func (n newsIndex) Intro() string {
@@ -44,39 +48,34 @@ func (n newsIndex) pro() (max, min int) {
 	return p.promax, p.promin
 }
 
-func newsChoose() map[goods.GoodsIndex]newsIndex {
+func newsGet() {
+	reset()
 	g := base.RandMany(int(goods.GoodsEnd), 5)
-	m := make(map[goods.GoodsIndex]newsIndex, 5)
-
 	for _, gIdx := range g {
 		p := base.Rand(100)
 		for _, nIdx := range news[goods.GoodsIndex(gIdx)] {
 			pmax, pmin := nIdx.pro()
 			if p >= pmin && p < pmax {
-				m[goods.GoodsIndex(gIdx)] = nIdx
+				newsSave[goods.GoodsIndex(gIdx)] = nIdx
 			}
 		}
 	}
-
-	return m
 }
 
-func Show() (news []string, goods map[string]int) {
+func reset() {
+	for k := range newsSave {
+		delete(newsSave, k)
+	}
+}
+
+func NewsShow() []string {
+	newsGet()
 	ns := make([]newsIndex, 0)
-	goods = make(map[string]int, 0)
-	n := newsChoose()
-	for k, v := range n {
+	for k, v := range newsSave {
 		ns = append(ns, v)
-		if v.Style() == "G" {
-			goods[k.Name()] = k.Max()
-		} else if v.Style() == "B" {
-			goods[k.Name()] = k.Min()
-		} else {
-			goods[k.Name()] = k.Normal()
-		}
 	}
 
-	news = make([]string, 0)
+	news := make([]string, 0)
 	for k := range news {
 		if ns[k].Style() == "N" {
 			continue
@@ -89,5 +88,20 @@ func Show() (news []string, goods map[string]int) {
 		news = append(news, newsStr[All].intro)
 	}
 
-	return
+	return news
+}
+
+func GoodsShow() map[string]int {
+	goods := make(map[string]int, 0)
+	for k, v := range newsSave {
+		if v.Style() == "G" {
+			goods[k.Name()] = k.Max()
+		} else if v.Style() == "B" {
+			goods[k.Name()] = k.Min()
+		} else {
+			goods[k.Name()] = k.Normal()
+		}
+	}
+
+	return goods
 }
