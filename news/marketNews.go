@@ -7,17 +7,22 @@ import (
 
 type newsFeature struct {
 	intro string
-	style string
+	style int
 	promin int
 	promax int
+}
+
+type NowMarket struct {
+	Goods goods.GoodsIndex
+	News newsIndex
+	Price int
 }
 
 type newsIndex int
 
 var news map[goods.GoodsIndex][]newsIndex
 var newsStr map[newsIndex]newsFeature
-
-var newsSave map[goods.GoodsIndex]newsIndex
+var save []*NowMarket
 
 const (
 	All newsIndex = iota
@@ -26,20 +31,30 @@ const (
 	newsEnd
 )
 
+const (
+	styleNormal = iota
+	styleGood
+	styleBetter
+	styleBest
+	styleBad
+	styleWorse
+	styleWorst
+)
+
+const goodsNum = 5
+
 func init() {
 	news = make(map[goods.GoodsIndex][]newsIndex, goods.GoodsEnd)
 	news[goods.MilkTee] = []newsIndex{All, MikeTeeMore, MikeTeeLess}
 
 	newsStr = make(map[newsIndex]newsFeature, newsEnd)
-
-	newsSave = make(map[goods.GoodsIndex]newsIndex)
 }
 
 func (n newsIndex) Intro() string {
 	return newsStr[n].intro
 }
 
-func (n newsIndex) Style() string {
+func (n newsIndex) Style() int {
 	return newsStr[n].style
 }
 
@@ -48,36 +63,44 @@ func (n newsIndex) pro() (max, min int) {
 	return p.promax, p.promin
 }
 
-func newsGet() {
-	reset()
-	g := base.RandMany(int(goods.GoodsEnd), 5)
-	for _, gIdx := range g {
+func marketGet() {
+	save = make([]*NowMarket, goodsNum)
+
+	g := base.RandMany(int(goods.GoodsEnd), goodsNum)
+	for k, gIdx := range g {
+		save[k] = &NowMarket{Goods:goods.GoodsIndex(gIdx)}
 		p := base.Rand(100)
 		for _, nIdx := range news[goods.GoodsIndex(gIdx)] {
 			pmax, pmin := nIdx.pro()
 			if p >= pmin && p < pmax {
-				newsSave[goods.GoodsIndex(gIdx)] = nIdx
+				save[k].News = nIdx
+				if nIdx.Style() == styleGood {
+					save[k].Price = save[k].Goods.Max()
+				} else if nIdx.Style() == styleBad {
+					save[k].Price = save[k].Goods.Min()
+				} else {
+					save[k].Price = save[k].Goods.Normal()
+				}
 			}
 		}
 	}
 }
 
-func reset() {
-	for k := range newsSave {
-		delete(newsSave, k)
-	}
+func GetMarket() []*NowMarket {
+	return save
 }
 
-func NewsShow() []string {
-	newsGet()
+func MarketNewsShow() []string {
+	marketGet()
+
 	ns := make([]newsIndex, 0)
-	for k, v := range newsSave {
-		ns = append(ns, v)
+	for _, v := range save {
+		ns = append(ns, v.News)
 	}
 
 	news := make([]string, 0)
 	for k := range news {
-		if ns[k].Style() == "N" {
+		if ns[k].Style() == styleNormal {
 			continue
 		} else {
 			news = append(news, ns[k].Intro())
@@ -91,17 +114,3 @@ func NewsShow() []string {
 	return news
 }
 
-func GoodsShow() map[string]int {
-	goods := make(map[string]int, 0)
-	for k, v := range newsSave {
-		if v.Style() == "G" {
-			goods[k.Name()] = k.Max()
-		} else if v.Style() == "B" {
-			goods[k.Name()] = k.Min()
-		} else {
-			goods[k.Name()] = k.Normal()
-		}
-	}
-
-	return goods
-}

@@ -15,20 +15,18 @@ func main() {
 	dial.PersonShow()
 
 	for env.GetAge() <= 70 {
-		lhome := dial.HomePageShow()
+		dial.HomePageShow()
+
 		i := base.InputNum()
-		if i == 0 || i >= lhome {
+		switch i {
+		case 1:
+			dial.Market()
+		case 2:
+			
+		default:
 			base.Notice("err")
 			continue
 		}
-
-		lNext := dial.HomePageChoose(i)
-		i = base.InputNum()
-		if i == 0 || i >= lNext {
-			base.Notice("err")
-			continue
-		}
-
 	}
 
 
