@@ -26,8 +26,9 @@ var save []*NowMarket
 
 const (
 	All newsIndex = iota
-	MikeTeeMore
-	MikeTeeLess
+	PhoneNormal
+	PhoneMore
+	PhoneLess
 	newsEnd
 )
 
@@ -45,9 +46,12 @@ const goodsNum = 5
 
 func init() {
 	news = make(map[goods.GoodsIndex][]newsIndex, goods.GoodsEnd)
-	news[goods.MilkTee] = []newsIndex{All, MikeTeeMore, MikeTeeLess}
+	news[goods.Phone] = []newsIndex{PhoneNormal, PhoneMore, PhoneLess}
 
 	newsStr = make(map[newsIndex]newsFeature, newsEnd)
+	newsStr[PhoneNormal] = newsFeature{style:styleNormal, promin:35, promax:80}
+	newsStr[PhoneMore] = newsFeature{intro:"more", style:styleGood, promin:80, promax:100}
+	newsStr[PhoneLess] = newsFeature{intro:"less", style:styleBad, promin:0, promax:35}
 }
 
 func (n newsIndex) Intro() string {
@@ -63,7 +67,7 @@ func (n newsIndex) pro() (max, min int) {
 	return p.promax, p.promin
 }
 
-func marketGet() {
+func NewMarketNew() {
 	save = make([]*NowMarket, goodsNum)
 
 	g := base.RandMany(int(goods.GoodsEnd), goodsNum)
@@ -91,8 +95,6 @@ func GetMarket() []*NowMarket {
 }
 
 func MarketNewsShow() []string {
-	marketGet()
-
 	ns := make([]newsIndex, 0)
 	for _, v := range save {
 		ns = append(ns, v.News)

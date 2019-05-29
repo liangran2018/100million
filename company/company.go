@@ -1,16 +1,19 @@
 package company
 
+import "github.com/liangran2018/100million/base"
+
 type companyFeature struct {
-	name      string
-	intro     string
-	born      float32
-	up1       float32
-	up2       float32
-	up3       float32
-	down1     float32
-	down2     float32
-	down3     float32
-	st        float32
+	name                string
+	intro               string
+	born, st            float32
+	middle int
+	good  []oneNew
+	bad   []oneNew
+}
+
+type oneNew struct {
+	p base.Pro
+	c float32
 }
 
 type CompanyIndex int
@@ -18,13 +21,41 @@ type CompanyIndex int
 var companys map[CompanyIndex]companyFeature
 
 const (
-	Longtu = iota
+	Longtu CompanyIndex = iota
 	CompanysEnd
 )
 
 func init() {
 	companys = make(map[CompanyIndex]companyFeature, CompanysEnd)
 	companys[Longtu] = companyFeature{}
+}
+
+func GetPriceByNews(c CompanyIndex, pro int, price float32) (float32, bool) {
+	cf := companys[c]
+
+	if cf.middle <= pro {
+		if cf.good[1].p.Min > pro {
+			price = price * 1.1 + cf.good[0].c
+			return price, price <= cf.st
+		} else if cf.good[1].p.Max < pro {
+			price = price * 2 + cf.good[2].c
+			return price, price <= cf.st
+		} else {
+			price = price * 1.5 + cf.good[1].c
+			return price, price <= cf.st
+		}
+	} else {
+		if cf.bad[1].p.Min > pro {
+			price = price * 0.9 - cf.bad[0].c
+			return price, price <= cf.st
+		} else if cf.bad[1].p.Max < pro {
+			price = price / 2 - cf.bad[2].c
+			return price, price <= cf.st
+		} else {
+			price = price * 0.7 - cf.bad[1].c
+			return price, price <= cf.st
+		}
+	}
 }
 
 func (g CompanyIndex) Name() string {
@@ -37,16 +68,6 @@ func (g CompanyIndex) Intro() string {
 
 func (g CompanyIndex) Born() float32 {
 	return companys[g].born
-}
-
-func (g CompanyIndex) Up() []float32 {
-	c := companys[g]
-	return []float32{c.up1, c.up2, c.up3}
-}
-
-func (g CompanyIndex) Down() []float32 {
-	c := companys[g]
-	return []float32{c.down1, c.down2, c.down3}
 }
 
 func (g CompanyIndex) St() float32 {

@@ -6,69 +6,91 @@ import (
 	"github.com/liangran2018/100million/own"
 )
 
-var act map[int]map[goods.GoodsIndex][]string
-
-func init() {
-	act = make(map[int]map[goods.GoodsIndex][]string)
+type act struct {
+	buy bool
+	sell bool
 }
 
-func Buy(goods goods.GoodsIndex, price, num int) bool {
+var goodsact = make(map[int]map[goods.GoodsIndex]*act)
+
+func Buy(goods goods.GoodsIndex, price, num int) string {
 	if env.MoneyGet() < price * num {
-		return false
+		return "money not enough"
 	}
 
 	if num > own.RoomFree() {
-		return false
+		return "room not enough"
 	}
 
 	own.Buy(goods, price, num)
 	env.MoneySub(price * num)
 
-	if !IsRepeat(goods, "B") {
+	if !IsBuyRepeat(goods) {
 		env.HealthSub(1)
 	}
 
-	return true
+	return "ok"
 }
 
-func Sell(goods goods.GoodsIndex, price, num int) bool {
+func Sell(goods goods.GoodsIndex, price, num int) string {
 	if own.GoodsNum(goods) < num {
-		return false
+		return "num wrong"
 	}
 
 	own.Sell(goods, num)
 	env.MoneyAdd(price * num)
 
-	if !IsRepeat(goods, "S") {
+	if !IsSellRepeat(goods) {
 		env.HealthSub(1)
 		if own.GoodsPrice(goods) < price {
 			env.ReputeAdd(2)
 		}
 	}
-	return true
+	return "ok"
 }
 
-func IsRepeat(g goods.GoodsIndex, s string) bool {
+func IsBuyRepeat(g goods.GoodsIndex) bool {
 	age := env.GetAge()
-	gs, ok := act[age]
+	gs, ok := goodsact[age]
 	if !ok {
-		act[age] = make(map[goods.GoodsIndex][]string)
-		act[age][g] = []string{s}
+		goodsact[age] = make(map[goods.GoodsIndex]*act)
+		goodsact[age][g] = &act{buy:true}
 		return false
 	}
 
 	a, ok := gs[g]
 	if !ok {
-		act[age][g] = []string{s}
+		goodsact[age][g].buy = true
 		return false
 	}
 
-	for _, v := range a {
-		if v == s {
-			return true
-		}
+	if a.buy {
+		return true
 	}
 
-	act[age][g] = append(act[age][g], s)
+	goodsact[age][g].buy = true
+	return false
+}
+
+func IsSellRepeat(g goods.GoodsIndex) bool {
+	age := env.GetAge()
+	gs, ok := goodsact[age]
+	if !ok {
+		goodsact[age] = make(map[goods.GoodsIndex]*act)
+		goodsact[age][g] = &act{sell:true}
+		return false
+	}
+
+	a, ok := gs[g]
+	if !ok {
+		goodsact[age][g].sell = true
+		return false
+	}
+
+	if a.sell {
+		return true
+	}
+
+	goodsact[age][g].sell = true
 	return false
 }

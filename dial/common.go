@@ -11,8 +11,8 @@ import (
 var homepage = []string{"", "market", "company", "consume", "lover", "100million", "next year", "retire"}
 
 func PersonShow() {
-	total := env.MoneyGet() + own.GoodsTotalPrice()
-	base.Notice(fmt.Sprintf("%d %d %d %d %d", env.GetAge(), env.HealthGet(), env.ReputeGet(), env.MoneyGet(), total))
+	total := env.MoneyGet() + own.GoodsTotalPrice() + own.CompanyTotalPrice()
+	base.Notice(fmt.Sprintf("age:%d health:%d repute:%d cash:%d total:%d", env.GetAge(), env.HealthGet(), env.ReputeGet(), env.MoneyGet(), total))
 }
 
 func pageShow(page []string) {

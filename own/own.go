@@ -2,6 +2,7 @@ package own
 
 import (
 	"github.com/liangran2018/100million/goods"
+	"github.com/liangran2018/100million/env"
 )
 
 type NowStore struct {
@@ -11,7 +12,7 @@ type NowStore struct {
 }
 
 var room = 100
-var own map[goods.GoodsIndex]*NowStore
+var own = make(map[goods.GoodsIndex]*NowStore)
 
 func RoomGet() int {
 	return room
@@ -32,10 +33,6 @@ func RoomUsed() int {
 
 func RoomFree() int {
 	return room - RoomUsed()
-}
-
-func init() {
-	own = make(map[goods.GoodsIndex]*NowStore)
 }
 
 func Buy(g goods.GoodsIndex, price, num int) {
@@ -87,4 +84,13 @@ func GetStore() []*NowStore {
 	}
 
 	return s
+}
+
+func MostBuy(price int) int {
+	free := RoomFree()
+	money := env.MoneyGet()
+	if price * free >= money {
+		return free
+	}
+	return money / price
 }

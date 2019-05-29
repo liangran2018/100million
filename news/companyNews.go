@@ -3,90 +3,41 @@ package news
 import (
 	"github.com/liangran2018/100million/company"
 	"github.com/liangran2018/100million/base"
-	"github.com/liangran2018/100million/goods"
+	"fmt"
 )
 
 type NowCompany struct {
 	Company company.CompanyIndex
-	News companysNewIndex
 	Price float32
+	IsSt  bool
 }
 
-type companysNewIndex int
-
-var companyNews map[company.CompanyIndex][]companysNewIndex
-var companyNewsStr map[companysNewIndex]newsFeature
 var companySave []*NowCompany
 
-const (
-	CompanyAll companysNewIndex = iota
-	LongtuGood
-	LongtuBad
-	companyEnd
-)
-
 func init() {
-	companyNews = make(map[company.CompanyIndex][]companysNewIndex, company.CompanysEnd)
-	companyNews[company.Longtu] = []companysNewIndex{CompanyAll, LongtuGood, LongtuBad}
-
-	companyNewsStr = make(map[companysNewIndex]newsFeature, companyEnd)
-
-	companySave = make([]*NowCompany, 0, len(companyNews))
-	for k, _ := range companyNews {
-		save := &NowCompany{Company:k, Price:k.Born()}
-		companySave = append(companySave, save)
+	companySave = make([]*NowCompany, company.CompanysEnd)
+	for i := company.Longtu; i < company.CompanysEnd; i++ {
+		companySave[i] = &NowCompany{Company:i, Price:i.Born()}
 	}
 }
 
-func (n companysNewIndex) Intro() string {
-	return companyNewsStr[n].intro
-}
-
-func (n companysNewIndex) Style() int {
-	return companyNewsStr[n].style
-}
-
-func (n companysNewIndex) pro() (max, min int) {
-	p := companyNewsStr[n]
-	return p.promax, p.promin
-}
-
-func companyGet() {
-	for k, gIdx := range companyNews {
-		save := &NowCompany{Company:k}
+func NewCompany() {
+	for k := range companySave {
 		p := base.Rand(100)
-		for _, nIdx := range companyNews[k] {
-			pmax, pmin := nIdx.pro()
-			if p >= pmin && p < pmax {
-				save.News = nIdx
-				switch nIdx.Style() {
-				case styleGood:
-					save.Price += save.Price * 0.1 + save.Company.Up()[0]
-				case styleBetter:
-					save.Price += save.Price * 0.5 + save.Company.Up()[1]
-				case styleBest:
-					save.Price += save.Price + save.Company.Up()[2]
-				case styleBad:
-					save.Price = save.Price * 0.1
-				}
-				if nIdx.Style() == styleGood {
-
-				} else if nIdx.Style() == styleBad {
-					save[k].Price = save[k].Goods.Min()
-				} else {
-					save[k].Price = save[k].Goods.Normal()
-				}
-			}
-		}
+		companySave[k].Price, companySave[k].IsSt = company.GetPriceByNews(companySave[k].Company, p, companySave[k].Price)
 	}
 }
 
-func GetMarket() []*NowMarket {
-	return save
+func GetCompany() []*NowCompany {
+	return companySave
 }
 
-func MarketNewsShow() []string {
-	marketGet()
+func CompanyShow() []string {
+	s := make([]string, len(companySave))
+	for k := range companySave {
+		s[k] = fmt.Sprintf("%s %d ", companySave[k].Company.Name(), companySave[k].Price)
+	}
+
 
 	ns := make([]newsIndex, 0)
 	for _, v := range save {

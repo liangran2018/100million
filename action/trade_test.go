@@ -8,42 +8,42 @@ import (
 )
 
 func TestIsRepeat(t *testing.T) {
-	ok := IsRepeat(goods.MilkTee, "B")
+	ok := IsBuyRepeat(goods.Bag)
 	t.Log(ok)
 
-	ok = IsRepeat(goods.MilkTee, "S")
+	ok = IsSellRepeat(goods.Bag)
 	t.Log(ok)
 
-	ok = IsRepeat(goods.MilkTee, "B")
+	ok = IsBuyRepeat(goods.Bag)
 	t.Log(ok)
 }
 
 func TestBuy(t *testing.T) {
-	ok := Buy(goods.MilkTee, 100, 10)
+	ok := Buy(goods.Bag, 100, 10)
 	t.Log(ok)
 
 	env.MoneyAdd(10000)
-	ok = Buy(goods.MilkTee, 100, 10)
+	ok = Buy(goods.Bag, 100, 10)
 	t.Log(ok)
 	t.Log(own.RoomUsed(), own.RoomFree())
-	t.Log(own.GoodsNum(goods.MilkTee), own.GoodsPrice(goods.MilkTee))
+	t.Log(own.GoodsNum(goods.Bag), own.GoodsPrice(goods.Bag))
 	t.Log(env.MoneyGet(), env.HealthGet())
 
-	ok = Buy(goods.MilkTee, 10, 10)
+	ok = Buy(goods.Bag, 10, 10)
 	t.Log(ok)
 	t.Log(own.RoomUsed(), own.RoomFree())
-	t.Log(own.GoodsNum(goods.MilkTee), own.GoodsPrice(goods.MilkTee))
+	t.Log(own.GoodsNum(goods.Bag), own.GoodsPrice(goods.Bag))
 	t.Log(env.MoneyGet(), env.HealthGet())
 
-	ok = Sell(goods.MilkTee, 200, 5)
-	t.Log(ok)
+	s := Sell(goods.Bag, 200, 5)
+	t.Log(s)
 	t.Log(own.RoomUsed(), own.RoomFree())
-	t.Log(own.GoodsNum(goods.MilkTee), own.GoodsPrice(goods.MilkTee))
+	t.Log(own.GoodsNum(goods.Bag), own.GoodsPrice(goods.Bag))
 	t.Log(env.MoneyGet(), env.HealthGet(), env.ReputeGet())
 
-	ok = Sell(goods.MilkTee, 300, 5)
-	t.Log(ok)
+	s = Sell(goods.Bag, 300, 5)
+	t.Log(s)
 	t.Log(own.RoomUsed(), own.RoomFree())
-	t.Log(own.GoodsNum(goods.MilkTee), own.GoodsPrice(goods.MilkTee))
+	t.Log(own.GoodsNum(goods.Bag), own.GoodsPrice(goods.Bag))
 	t.Log(env.MoneyGet(), env.HealthGet(), env.ReputeGet())
 }

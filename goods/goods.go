@@ -18,13 +18,25 @@ type GoodsIndex int
 var goods map[GoodsIndex]goodsFeature
 
 const (
-	MilkTee GoodsIndex = iota
+	Phone GoodsIndex = iota
+	BTC
+	Wine
+	Bag
+	Domain
+	Car
 	GoodsEnd
+
 )
 
 func init() {
 	goods = make(map[GoodsIndex]goodsFeature, GoodsEnd)
-	goods[MilkTee] = goodsFeature{}
+	goods[Phone] = goodsFeature{name:"", intro:"", maxmax:29888, maxmin:12888, normalmax:10888, normalmin:5288, minmax:4488, minmin:888}
+	goods[BTC] = goodsFeature{name:"", intro:"", maxmax:133728, maxmin:77392, normalmax:43853, normalmin:19978, minmax:15166, minmin:7219}
+	goods[Wine] = goodsFeature{name:"", intro:"", maxmax:15000, maxmin:12000, normalmax:3000, normalmin:1500, minmax:1200, minmin:600}
+	goods[Bag] = goodsFeature{name:"", intro:"", maxmax:80000, maxmin:40000}
+
+
+
 }
 
 func (g GoodsIndex) Name() string {

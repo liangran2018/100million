@@ -22,7 +22,7 @@ func MarketPageShow() {
 	pageShow(marketpage)
 }
 
-func GoodPageShow() {
+func goodPageShow() {
 	pageShow(goodspage)
 }
 
@@ -60,13 +60,18 @@ func Goods() {
 			return
 		}
 
-		singleGoods(gs[i])
+		singleGoods(gs[i-1])
 	}
 }
 
 func Stores() {
 	for {
 		gs := own.GetStore()
+		if len(gs) == 0 {
+			base.Notice("nothing")
+			return
+		}
+
 		for k, v := range gs {
 			base.Notice(fmt.Sprintf("%d. %s: %d %d", k, v.Goods.Name(), v.Num, v.Price))
 		}
@@ -83,20 +88,16 @@ func Stores() {
 
 func singleGoods(m *news.NowMarket) {
 	for {
-		GoodPageShow()
+		goodPageShow()
 		i := base.InputNum()
 		switch i {
 		case 1:
 			base.Notice(m.Goods.Intro())
 		case 2:
+			base.Notice("most buy " + base.StrVal(own.MostBuy(m.Price)))
 			base.Notice("num")
 			i := base.InputNum()
-			ok := action.Buy(m.Goods, m.Price, i)
-			if !ok {
-				base.Notice("fail")
-			} else {
-				base.Notice("ok")
-			}
+			base.Notice(action.Buy(m.Goods, m.Price, i))
 		default:
 			return
 		}
@@ -113,12 +114,7 @@ func singleStore(s *own.NowStore) {
 		case 2:
 			base.Notice("num")
 			i := base.InputNum()
-			ok := action.Sell(s.Goods, s.Price, i)
-			if !ok {
-				base.Notice("fail")
-			} else {
-				base.Notice("ok")
-			}
+			base.Notice(action.Sell(s.Goods, s.Price, i))
 		default:
 			return
 		}
