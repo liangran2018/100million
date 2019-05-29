@@ -8,11 +8,11 @@ import (
 	"github.com/liangran2018/100million/base"
 )
 
-var homepage = []string{"", "market", "company", "consume", "lover", "100million", "next year", "retire"}
+var homepage = []string{"", "市场", "公司", "消费", "约会", "一亿小目标", "下一年", "提前退休"}
 
 func PersonShow() {
 	total := env.MoneyGet() + own.GoodsTotalPrice() + own.CompanyTotalPrice()
-	base.Notice(fmt.Sprintf("age:%d health:%d repute:%d cash:%d total:%d", env.GetAge(), env.HealthGet(), env.ReputeGet(), env.MoneyGet(), total))
+	base.Notice(fmt.Sprintf("年龄:%d 健康:%d 名声:%d 现金:%d 总资产:%d", env.GetAge(), env.HealthGet(), env.ReputeGet(), env.MoneyGet(), total))
 }
 
 func pageShow(page []string) {

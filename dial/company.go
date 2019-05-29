@@ -20,12 +20,12 @@ func Company() {
 		cs := news.GetCompany()
 		for k, v := range cs {
 			if v.IsSt {
-				base.Notice(fmt.Sprintf("%d. %s: isst", k+1, v.Company.Name()))
+				base.Notice(fmt.Sprintf("%d. %s: 退市", k+1, v.Company.Name()))
 				continue
 			}
-			base.Notice(fmt.Sprintf("%d. %s: %d", k+1, v.Company.Name(), v.Price))
+			base.Notice(fmt.Sprintf("%d. %s 价格: %.2f", k+1, v.Company.Name(), v.Price))
 		}
-		base.Notice(fmt.Sprintf("%d. %s", len(cs)+1, "return"))
+		base.Notice(fmt.Sprintf("%d. %s", len(cs)+1, "返回"))
 
 		i := base.InputNum()
 		if i < 1 || i >= len(cs)+1 {

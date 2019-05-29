@@ -89,7 +89,7 @@ func GetStore() []*NowStore {
 func MostBuy(price int) int {
 	free := RoomFree()
 	money := env.MoneyGet()
-	if price * free >= money {
+	if price * free <= money {
 		return free
 	}
 	return money / price

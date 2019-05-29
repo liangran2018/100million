@@ -10,9 +10,9 @@ import (
 	"github.com/liangran2018/100million/action"
 )
 
-var marketpage = []string{"", "goods", "quotations", "storehouse", "return"}
-var goodspage = []string{"", "intro", "buy", "return"}
-var storepage = []string{"", "intro", "sell", "return"}
+var marketpage = []string{"", "物品", "市场行情", "仓库", "返回"}
+var goodspage = []string{"", "简介", "买入", "返回"}
+var storepage = []string{"", "简介", "卖出", "返回"}
 
 func HomePageShow() {
 	pageShow(homepage)
@@ -53,7 +53,7 @@ func Goods() {
 		for k, v := range gs {
 			base.Notice(fmt.Sprintf("%d. %s: %d", k+1, v.Goods.Name(), v.Price))
 		}
-		base.Notice(fmt.Sprintf("%d. %s", len(gs)+1, "return"))
+		base.Notice(fmt.Sprintf("%d. %s", len(gs)+1, "返回"))
 
 		i := base.InputNum()
 		if i < 1 || i >= len(gs)+1 {
@@ -68,7 +68,7 @@ func Stores() {
 	for {
 		gs := own.GetStore()
 		if len(gs) == 0 {
-			base.Notice("nothing")
+			base.Notice("空空如也")
 			return
 		}
 
