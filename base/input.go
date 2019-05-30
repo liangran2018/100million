@@ -9,17 +9,20 @@ import (
 var input = bufio.NewReader(os.Stdin)
 
 func Input() string {
-	i, err := input.ReadString('\n')
-	if err != nil {
-		panic(err)
-	}
+	for {
+		i, err := input.ReadString('\n')
+		if err != nil {
+			Log(Wrong, "ReadString err: " + err.Error())
+			continue
+		}
 
-	s := strings.TrimSpace(i)
-	if s == "" {
-		panic(err)
-	}
+		s := strings.TrimSpace(i)
+		if s == "" {
+			continue
+		}
 
-	return s
+		return s
+	}
 }
 
 func InputNum() int {

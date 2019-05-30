@@ -158,7 +158,7 @@ func GetMarket() []*NowMarket {
 	return save
 }
 
-func MarketNewsShow() []string {
+func marketNewsGet() []string {
 	ns := make([]newsIndex, 0)
 	for _, v := range save {
 		ns = append(ns, v.News)
@@ -180,3 +180,13 @@ func MarketNewsShow() []string {
 	return news
 }
 
+func MarketNewsShow() {
+	str := marketNewsGet()
+	base.Notice("*******************************************")
+	for k := range str {
+		base.Notice(base.StrVal(k+1) + ". " + str[k])
+	}
+	base.Notice("*******************************************")
+	base.Log(base.Info, str)
+
+}

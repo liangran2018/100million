@@ -26,11 +26,7 @@ func main() {
 
 	dial.PersonShow()
 	news.NewMarketNew()
-	marketNews := news.MarketNewsShow()
-	for k := range marketNews {
-		base.Notice(marketNews[k])
-	}
-	base.Log(base.Info, marketNews)
+	news.MarketNewsShow()
 
 	for env.GetAge() <= 70 {
 		dial.HomePageShow()

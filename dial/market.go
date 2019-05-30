@@ -2,8 +2,6 @@ package dial
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/liangran2018/100million/own"
 	"github.com/liangran2018/100million/base"
 	"github.com/liangran2018/100million/news"
@@ -38,7 +36,7 @@ func Market() {
 		case 1:
 			Goods()
 		case 2:
-			base.Notice(strings.Join(news.MarketNewsShow(), "\n"))
+			news.MarketNewsShow()
 		case 3:
 			Stores()
 		default:
@@ -73,16 +71,16 @@ func Stores() {
 		}
 
 		for k, v := range gs {
-			base.Notice(fmt.Sprintf("%d. %s: %d %d", k, v.Goods.Name(), v.Num, v.Price))
+			base.Notice(fmt.Sprintf("%d. %s  数量: %d 买入价: %d", k+1, v.Goods.Name(), v.Num, v.Price))
 		}
-		base.Notice(fmt.Sprintf("%d. %s", len(gs)+1, "return"))
+		base.Notice(fmt.Sprintf("%d. %s", len(gs)+1, "返回"))
 
 		i := base.InputNum()
 		if i < 1 || i >= len(gs)+1 {
 			return
 		}
 
-		singleStore(gs[i])
+		singleStore(gs[i-1])
 	}
 }
 
@@ -94,10 +92,15 @@ func singleGoods(m *news.NowMarket) {
 		case 1:
 			base.Notice(m.Goods.Intro())
 		case 2:
-			base.Notice("most buy " + base.StrVal(own.MostBuy(m.Price)))
-			base.Notice("num")
+			base.Notice(fmt.Sprintf("最多可买%d个", own.MostBuy(m.Price)))
+			base.Notice("购买数量")
 			i := base.InputNum()
+			if i <= 0 {
+				base.Notice("数量有误")
+				return
+			}
 			base.Notice(action.Buy(m.Goods, m.Price, i))
+			return
 		default:
 			return
 		}
@@ -112,9 +115,15 @@ func singleStore(s *own.NowStore) {
 		case 1:
 			base.Notice(s.Goods.Intro())
 		case 2:
-			base.Notice("num")
+			base.Notice(fmt.Sprintf("最多可卖%d个", s.Num))
+			base.Notice("卖出数量")
 			i := base.InputNum()
+			if i <= 0 {
+				base.Notice("数量有误")
+				return
+			}
 			base.Notice(action.Sell(s.Goods, s.Price, i))
+			return
 		default:
 			return
 		}

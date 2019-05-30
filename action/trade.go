@@ -15,11 +15,11 @@ var goodsact = make(map[int]map[goods.GoodsIndex]*act)
 
 func Buy(goods goods.GoodsIndex, price, num int) string {
 	if env.MoneyGet() < price * num {
-		return "money not enough"
+		return "现金不足"
 	}
 
 	if num > own.RoomFree() {
-		return "room not enough"
+		return "仓库空间不足"
 	}
 
 	own.Buy(goods, price, num)
@@ -29,12 +29,12 @@ func Buy(goods goods.GoodsIndex, price, num int) string {
 		env.HealthSub(1)
 	}
 
-	return "ok"
+	return "购买成功"
 }
 
 func Sell(goods goods.GoodsIndex, price, num int) string {
 	if own.GoodsNum(goods) < num {
-		return "num wrong"
+		return "数量有误"
 	}
 
 	own.Sell(goods, num)
@@ -46,7 +46,7 @@ func Sell(goods goods.GoodsIndex, price, num int) string {
 			env.ReputeAdd(2)
 		}
 	}
-	return "ok"
+	return "卖出成功"
 }
 
 func IsBuyRepeat(g goods.GoodsIndex) bool {
@@ -60,7 +60,7 @@ func IsBuyRepeat(g goods.GoodsIndex) bool {
 
 	a, ok := gs[g]
 	if !ok {
-		goodsact[age][g].buy = true
+		goodsact[age][g] = &act{buy:true}
 		return false
 	}
 
