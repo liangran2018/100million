@@ -122,7 +122,12 @@ func singleStore(s *own.NowStore) {
 				base.Notice("数量有误")
 				return
 			}
-			base.Notice(action.Sell(s.Goods, s.Price, i))
+			price := news.NowPrice(s.Goods)
+			if price <= 0 {
+				base.Notice("市场暂时无需求")
+				return
+			}
+			base.Notice(action.Sell(s.Goods, price, i))
 			return
 		default:
 			return

@@ -158,6 +158,16 @@ func GetMarket() []*NowMarket {
 	return save
 }
 
+func NowPrice(g goods.GoodsIndex) int {
+	for k := range save {
+		if save[k].Goods == g {
+			return save[k].Price
+		}
+	}
+
+	return -1
+}
+
 func marketNewsGet() []string {
 	ns := make([]newsIndex, 0)
 	for _, v := range save {
@@ -188,5 +198,4 @@ func MarketNewsShow() {
 	}
 	base.Notice("*******************************************")
 	base.Log(base.Info, str)
-
 }
