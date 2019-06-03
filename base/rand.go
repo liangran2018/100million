@@ -6,9 +6,11 @@ import (
 )
 
 var rd = rand.NewSource(0)
+var num int64 = 0
 
 func Rand(tt int) int {
-	rd.Seed(time.Now().UnixNano())
+	rd.Seed(time.Now().UnixNano() + num)
+	num++
 	r := rand.New(rd)
 	return r.Intn(tt)
 }

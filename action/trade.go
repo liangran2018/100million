@@ -83,7 +83,7 @@ func IsSellRepeat(g goods.GoodsIndex) bool {
 
 	a, ok := gs[g]
 	if !ok {
-		goodsact[age][g].sell = true
+		goodsact[age][g] = &act{sell:true}
 		return false
 	}
 
