@@ -5,28 +5,16 @@ import (
 	"github.com/liangran2018/100million/env"
 	"github.com/liangran2018/100million/event"
 	"github.com/liangran2018/100million/dial"
-	"fmt"
 	"github.com/liangran2018/100million/action"
-	"github.com/liangran2018/100million/news"
 )
 
 func main() {
 	base.NewLogFile()
 	defer base.CloseLog()
 
-	//defer func() {
-		r := recover()
-		if r != nil {
-			fmt.Println("panic: ", r)
-			base.Log(base.Wrong, r)
-		}
-	//}()
-
 	event.StartEvent()
-
+	action.Next()
 	dial.PersonShow()
-	news.NewMarketNew()
-	news.MarketNewsShow()
 
 	for env.GetAge() <= 70 {
 		dial.HomePageShow()
@@ -37,8 +25,12 @@ func main() {
 			dial.Market()
 		case 2:
 			dial.Company()
+		case 3:
+			
 		case 6:
 			action.Next()
+		case 7:
+			action.Retire()
 		default:
 			base.Notice("err")
 			continue

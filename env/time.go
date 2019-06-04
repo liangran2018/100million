@@ -1,6 +1,6 @@
 package env
 
-var age = 20
+var age = 19
 
 func NextYear() {
 	age++

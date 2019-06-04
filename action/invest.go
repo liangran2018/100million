@@ -49,7 +49,7 @@ func IsInvestRepeat(c company.CompanyIndex) bool {
 
 	a, ok := gs[c]
 	if !ok {
-		companyact[age][c].buy = true
+		companyact[age][c] = &act{buy:true}
 		return false
 	}
 
@@ -72,7 +72,7 @@ func IsDisInvestRepeat(c company.CompanyIndex) bool {
 
 	a, ok := gs[c]
 	if !ok {
-		companyact[age][c].sell = true
+		companyact[age][c] = &act{sell:true}
 		return false
 	}
 

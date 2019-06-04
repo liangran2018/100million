@@ -3,12 +3,11 @@ package company
 import "github.com/liangran2018/100million/base"
 
 type companyFeature struct {
-	name                string
-	intro               string
-	born, st            float32
-	middle int
-	good  []oneNew
-	bad   []oneNew
+	name     string
+	born, st float32
+	middle   int
+	good     []oneNew
+	bad      []oneNew
 }
 
 type oneNew struct {
@@ -35,24 +34,24 @@ func GetPriceByNews(c CompanyIndex, pro int, price float32) (float32, bool) {
 
 	if cf.middle <= pro {
 		if cf.good[1].p.Min > pro {
-			price = price * 1.1 + cf.good[0].c
+			price = price*1.1 + cf.good[0].c
 			return price, price <= cf.st
 		} else if cf.good[1].p.Max < pro {
-			price = price * 2 + cf.good[2].c
+			price = price*2 + cf.good[2].c
 			return price, price <= cf.st
 		} else {
-			price = price * 1.5 + cf.good[1].c
+			price = price*1.5 + cf.good[1].c
 			return price, price <= cf.st
 		}
 	} else {
 		if cf.bad[1].p.Min > pro {
-			price = price * 0.9 - cf.bad[0].c
+			price = price*0.9 - cf.bad[0].c
 			return price, price <= cf.st
 		} else if cf.bad[1].p.Max < pro {
-			price = price / 2 - cf.bad[2].c
+			price = price/2 - cf.bad[2].c
 			return price, price <= cf.st
 		} else {
-			price = price * 0.7 - cf.bad[1].c
+			price = price*0.7 - cf.bad[1].c
 			return price, price <= cf.st
 		}
 	}
@@ -60,10 +59,6 @@ func GetPriceByNews(c CompanyIndex, pro int, price float32) (float32, bool) {
 
 func (g CompanyIndex) Name() string {
 	return companys[g].name
-}
-
-func (g CompanyIndex) Intro() string {
-	return companys[g].intro
 }
 
 func (g CompanyIndex) Born() float32 {

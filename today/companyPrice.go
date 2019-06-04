@@ -1,4 +1,4 @@
-package news
+package today
 
 import (
 	"github.com/liangran2018/100million/company"
@@ -21,42 +21,24 @@ func init() {
 	}
 }
 
-func NewCompany() {
+func TodayCompany() {
 	for k := range companySave {
 		p := base.Rand(100)
 		companySave[k].Price, companySave[k].IsSt = company.GetPriceByNews(companySave[k].Company, p, companySave[k].Price)
 	}
 }
 
-func GetCompany() []*NowCompany {
+func GetTodayCompany() []*NowCompany {
 	return companySave
 }
 
-func CompanyShow() []string {
-	s := make([]string, len(companySave))
-	for k := range companySave {
-		s[k] = fmt.Sprintf("%s %d ", companySave[k].Company.Name(), companySave[k].Price)
-	}
-
-
-	ns := make([]newsIndex, 0)
-	for _, v := range save {
-		ns = append(ns, v.News)
-	}
-
-	news := make([]string, 0)
-	for k := range news {
-		if ns[k].Style() == styleNormal {
+func TodayCompanyShow() {
+	for k, v := range companySave {
+		if v.IsSt {
+			base.Notice(fmt.Sprintf("%d. %s: 退市", k+1, v.Company.Name()))
 			continue
-		} else {
-			news = append(news, ns[k].Intro())
 		}
+		base.Notice(fmt.Sprintf("%d. %s 价格: %.2f", k+1, v.Company.Name(), v.Price))
 	}
-
-	if len(news) == 0 {
-		news = append(news, newsStr[All].intro)
-	}
-
-	return news
 }
 

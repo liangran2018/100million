@@ -1,15 +1,15 @@
 package dial
 
 import (
-	"github.com/liangran2018/100million/news"
 	"github.com/liangran2018/100million/base"
 	"fmt"
 	"github.com/liangran2018/100million/action"
 	"github.com/liangran2018/100million/env"
 	"github.com/liangran2018/100million/own"
+	"github.com/liangran2018/100million/today"
 )
 
-var companyspage = []string{"", "intro", "buy", "sell", "return"}
+var companyspage = []string{"", "buy", "sell", "return"}
 
 func companyPageShow() {
 	pageShow(companyspage)
@@ -17,14 +17,8 @@ func companyPageShow() {
 
 func Company() {
 	for {
-		cs := news.GetCompany()
-		for k, v := range cs {
-			if v.IsSt {
-				base.Notice(fmt.Sprintf("%d. %s: 退市", k+1, v.Company.Name()))
-				continue
-			}
-			base.Notice(fmt.Sprintf("%d. %s 价格: %.2f", k+1, v.Company.Name(), v.Price))
-		}
+		today.TodayCompanyShow()
+		cs := today.GetTodayCompany()
 		base.Notice(fmt.Sprintf("%d. %s", len(cs)+1, "返回"))
 
 		i := base.InputNum()
@@ -36,14 +30,12 @@ func Company() {
 	}
 }
 
-func singleCompany(c *news.NowCompany) {
+func singleCompany(c *today.NowCompany) {
 	for {
 		companyPageShow()
 		i := base.InputNum()
 		switch i {
 		case 1:
-			base.Notice(c.Company.Intro())
-		case 2:
 			if c.IsSt {
 				base.Notice("can't buy")
 				continue
@@ -52,9 +44,9 @@ func singleCompany(c *news.NowCompany) {
 			base.Notice("num")
 			i := base.InputNum()
 			base.Notice(action.Invest(c.Company, c.Price, float32(i)))
-		case 3:
+		case 2:
 			if c.IsSt {
-				base.Notice("can't buy")
+				base.Notice("can't sell")
 				continue
 			}
 			base.Notice("most sell " + base.StrVal(own.CompanyNum(c.Company)))

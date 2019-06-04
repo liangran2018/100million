@@ -4,17 +4,13 @@ import (
 	"fmt"
 	"github.com/liangran2018/100million/own"
 	"github.com/liangran2018/100million/base"
-	"github.com/liangran2018/100million/news"
 	"github.com/liangran2018/100million/action"
+	"github.com/liangran2018/100million/today"
 )
 
 var marketpage = []string{"", "物品", "市场行情", "仓库", "返回"}
 var goodspage = []string{"", "简介", "买入", "返回"}
 var storepage = []string{"", "简介", "卖出", "返回"}
-
-func HomePageShow() {
-	pageShow(homepage)
-}
 
 func MarketPageShow() {
 	pageShow(marketpage)
@@ -36,7 +32,7 @@ func Market() {
 		case 1:
 			Goods()
 		case 2:
-			news.MarketNewsShow()
+			today.TodayNewsShow()
 		case 3:
 			Stores()
 		default:
@@ -47,7 +43,7 @@ func Market() {
 
 func Goods() {
 	for {
-		gs := news.GetMarket()
+		gs := today.GetTodayNews()
 		for k, v := range gs {
 			base.Notice(fmt.Sprintf("%d. %s: %d", k+1, v.Goods.Name(), v.Price))
 		}
@@ -84,7 +80,7 @@ func Stores() {
 	}
 }
 
-func singleGoods(m *news.NowMarket) {
+func singleGoods(m *today.NowMarket) {
 	for {
 		goodPageShow()
 		i := base.InputNum()
@@ -115,6 +111,12 @@ func singleStore(s *own.NowStore) {
 		case 1:
 			base.Notice(s.Goods.Intro())
 		case 2:
+			price := today.TodayPrice(s.Goods)
+			if price <= 0 {
+				base.Notice("市场暂时无需求")
+				return
+			}
+
 			base.Notice(fmt.Sprintf("最多可卖%d个", s.Num))
 			base.Notice("卖出数量")
 			i := base.InputNum()
@@ -122,11 +124,7 @@ func singleStore(s *own.NowStore) {
 				base.Notice("数量有误")
 				return
 			}
-			price := news.NowPrice(s.Goods)
-			if price <= 0 {
-				base.Notice("市场暂时无需求")
-				return
-			}
+
 			base.Notice(action.Sell(s.Goods, price, i))
 			return
 		default:

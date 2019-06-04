@@ -21,3 +21,7 @@ func pageShow(page []string) {
 		base.Notice(fmt.Sprintf("%d. %s", k, v))
 	}
 }
+
+func HomePageShow() {
+	pageShow(homepage)
+}
